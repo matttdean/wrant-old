@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useState, createContext, useEffect } from 'react'
+
+let localObj;
 if (typeof window !== 'undefined') {
-const localObj = JSON.parse(localStorage.getItem('contentObj'));
+    localObj  = JSON.parse(localStorage.getItem('contentObj'));
 }
 
 export const StorageContext = createContext(null);
@@ -10,6 +12,7 @@ export default function StorageContextProvider({ children }) {
     const [list, setList] = useState([]);
     const [activeDocumentTextContent, setActiveDocumentTextContent] = useState("");
     useEffect(() => {
+        
         if(localObj) {
         setList(localObj)
         }

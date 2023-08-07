@@ -13,6 +13,7 @@ export default function StorageContextProvider({ children }) {
     const [list, setList] = useState([]);
     const [activeDocumentTextContent, setActiveDocumentTextContent] = useState("");
     const [isSwiping, setIsSwiping] = useState(false);
+    const [sba, setSba] = useState(true);
     const sideBarIsActive = useRef(true);
     useEffect(() => {
         
@@ -21,7 +22,7 @@ export default function StorageContextProvider({ children }) {
         }
     }, [])
     return (
-    <StorageContext.Provider value={{ list, setList, activeDocumentTextContent, setActiveDocumentTextContent, isSwiping, setIsSwiping, sideBarIsActive }}>
+    <StorageContext.Provider value={{ list, setList, activeDocumentTextContent, setActiveDocumentTextContent, isSwiping, setIsSwiping, sideBarIsActive, sba, setSba }}>
         {children}
     </StorageContext.Provider>
     )

@@ -42,12 +42,10 @@ export default function DocumentList() {
   const toggleSideBar = () => {
     sideBarRef.current.classList.toggle('-translate-x-[100%]');
     sideBarIsActive.current = !sideBarIsActive.current;
-    console.log(sideBarIsActive.current);
     
   }
 
   useEffect(() => {
-    console.log(isSwiping)
     if(isSwiping) {
     toggleSideBar();
     }

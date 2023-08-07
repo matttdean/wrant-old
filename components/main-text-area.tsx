@@ -4,10 +4,12 @@ import React, { useEffect, useState, useRef, useContext } from 'react';
 import { StorageContext } from '@/context/storage-context';
 
 export default function MainTextArea() {
-    const { list, setList } = useContext(StorageContext);
+    const { list, setList, isSwiping, setIsSwiping } = useContext(StorageContext);
     const [wordCount, setWordCount] = useState(0);
     const [currentDocumentText, setCurrentDocumentText] = useState("");
     const [currentDocumentTitle, setCurrentDocumentTitle] = useState("")
+    const [touchStart, setTouchStart] = useState(null)
+    const [touchEnd, setTouchEnd] = useState(null)
     
     const titleRef = useRef();
     const contentRef = useRef();
@@ -91,7 +93,6 @@ export default function MainTextArea() {
         }
       };
       
-
     const getActive = () => {
         const active = list.filter(item => item.active === true);
         if (active[0] !== undefined) {
@@ -100,6 +101,30 @@ export default function MainTextArea() {
             return false;
         }
     }
+
+  
+  // the required distance between touchStart and touchEnd to be detected as a swipe
+  const minSwipeDistance = 50;
+  
+  const onTouchStart = (e) => {
+    setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+  
+  const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX)
+  
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+    if (isRightSwipe) {
+      setIsSwiping(true)
+      console.log(distance)
+    } 
+  }
+
+
 
     const activeDocument = getActive();
 
@@ -159,7 +184,9 @@ export default function MainTextArea() {
 
   return (
         <>
-            <div className='w-full lg:w-[60rem] pt-12 px-6 sm:pt-10 sm:px-10'>
+            <div 
+            onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
+            className='min-h-screen w-full lg:w-[60rem] pt-12 px-6 sm:pt-10 sm:px-10'>
                 <div
                     ref={titleRef}
                     contentEditable

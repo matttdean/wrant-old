@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, createContext, useEffect } from 'react'
+import React, { useState, createContext, useEffect, useRef } from 'react'
 
 let localObj;
 if (typeof window !== 'undefined') {
@@ -8,9 +8,12 @@ if (typeof window !== 'undefined') {
 }
 
 export const StorageContext = createContext(null);
+
 export default function StorageContextProvider({ children }) {
     const [list, setList] = useState([]);
     const [activeDocumentTextContent, setActiveDocumentTextContent] = useState("");
+    const [isSwiping, setIsSwiping] = useState(false);
+    const sideBarIsActive = useRef(true);
     useEffect(() => {
         
         if(localObj) {
@@ -18,7 +21,7 @@ export default function StorageContextProvider({ children }) {
         }
     }, [])
     return (
-    <StorageContext.Provider value={{ list, setList, activeDocumentTextContent, setActiveDocumentTextContent }}>
+    <StorageContext.Provider value={{ list, setList, activeDocumentTextContent, setActiveDocumentTextContent, isSwiping, setIsSwiping, sideBarIsActive }}>
         {children}
     </StorageContext.Provider>
     )

@@ -7,8 +7,32 @@ import { HiMiniArrowsRightLeft } from 'react-icons/hi2';
 import { StorageContext } from '@/context/storage-context';
 
 export default function DocumentList() {
-  const { list, setList, activeDocumentTextContent, setActiveDocumentTextContent } = useContext(StorageContext);
+  const { list, setList, isSwiping, setIsSwiping, sideBarIsActive } = useContext(StorageContext);
   const sideBarRef = useRef<HTMLDivElement>();
+  const [touchStart, setTouchStart] = useState(null)
+  const [touchEnd, setTouchEnd] = useState(null)
+ 
+
+  
+  // the required distance between touchStart and touchEnd to be detected as a swipe
+  const minSwipeDistance = 50;
+  
+  const onTouchStart = (e) => {
+    setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+  
+  const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX)
+  
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+    if (isLeftSwipe) {
+      setIsSwiping(true)
+    } 
+  }
 
   const removeListItem = async (id)=> {
     const newList = list.filter((item) => item.id !== id);
@@ -16,8 +40,21 @@ export default function DocumentList() {
   }
 
   const toggleSideBar = () => {
-    sideBarRef.current.classList.toggle('-translate-x-[100%]')
+    sideBarRef.current.classList.toggle('-translate-x-[100%]');
+    sideBarIsActive.current = !sideBarIsActive.current;
+    console.log(sideBarIsActive.current);
+    
   }
+
+  useEffect(() => {
+    console.log(isSwiping)
+    if(isSwiping) {
+    toggleSideBar();
+    }
+    setIsSwiping(false)
+  }, [isSwiping])
+
+
 
 const removeActive = () => {
 
@@ -66,7 +103,9 @@ const removeActive = () => {
     }
   }, [list])
   return (
-    <div ref={sideBarRef} className='fixed flex flex-col items-center left-0 top-0 w-full sm:w-[25rem] h-screen bg-teal-400/10 transition-transform pt-10 backdrop-blur-md z-[999]'>
+    <div 
+      onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
+      ref={sideBarRef} className='fixed flex flex-col items-center left-0 top-0 w-full sm:w-[25rem] h-screen bg-teal-400/10 transition-transform pt-10 backdrop-blur-md z-[999]'>
     <div className='overflow-y-scroll flex flex-col items-center w-full h-auto no-scrollbar !overflow-x-hidden'>
   
       {list.map((item) => (

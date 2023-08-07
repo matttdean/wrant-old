@@ -140,15 +140,15 @@ export default function MainTextArea() {
         
       }, [currentDocumentText]);
 
-      useEffect(() => {
-        if (sideBarIsActive.current) {
-            mainElementRef.current.classList.add('overflow-hidden')
-            mainElementRef.current.classList.add('fixed')
-        } else {
-            mainElementRef.current.classList.remove('overflow-hidden')
-            mainElementRef.current.classList.remove('fixed')
-        }
-      }, [isSwiping])
+    //   useEffect(() => {
+    //     if (sideBarIsActive.current) {
+    //         mainElementRef.current.classList.add('overflow-hidden')
+    //         mainElementRef.current.classList.add('fixed')
+    //     } else {
+    //         mainElementRef.current.classList.remove('overflow-hidden')
+    //         mainElementRef.current.classList.remove('fixed')
+    //     }
+    //   }, [isSwiping])
 
     const updateTitleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.nativeEvent.inputType  === 'insertParagraph') { 

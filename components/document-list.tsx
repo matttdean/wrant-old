@@ -61,7 +61,9 @@ const removeActive = () => {
   }
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
     localStorage.setItem('contentObj', JSON.stringify(list));
+    }
   }, [list])
   return (
     <div ref={sideBarRef} className='fixed flex flex-col items-center left-0 top-0 w-full sm:w-[25rem] h-screen bg-teal-400/10 transition-transform pt-10 backdrop-blur-md z-[999]'>

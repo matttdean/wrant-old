@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, createContext, useEffect } from 'react'
-
+if (typeof window !== 'undefined') {
 const localObj = JSON.parse(localStorage.getItem('contentObj'));
+}
 
 export const StorageContext = createContext(null);
 export default function StorageContextProvider({ children }) {
